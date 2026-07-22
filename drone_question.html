@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>초경량비행장치 구술 연습</title>
+
+<style>
+body{
+    font-family:"맑은 고딕",sans-serif;
+    background:#f5f5f5;
+    text-align:center;
+    padding:40px;
+}
+
+.container{
+    max-width:800px;
+    margin:auto;
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 0 10px rgba(0,0,0,.15);
+}
+
+h1{
+    color:#1565c0;
+}
+
+#question{
+    font-size:28px;
+    font-weight:bold;
+    margin:40px 0;
+    min-height:80px;
+}
+
+input{
+    width:90%;
+    padding:15px;
+    font-size:20px;
+}
+
+button{
+    padding:12px 24px;
+    margin:10px;
+    font-size:18px;
+    cursor:pointer;
+}
+
+#result{
+    margin-top:30px;
+    font-size:22px;
+    line-height:1.8;
+}
+
+/* ---------- ad bar (Coupang Partners) ---------- */
+#ad-bar{
+    flex:0 0 auto;
+    display:flex; flex-direction:column; align-items:center;
+    gap:4px;
+    padding:2px 0 10px 0;
+    position:relative; z-index:5;
+}
+#ad-bar .ad-disclosure{
+    font-size:10px; color:var(--text-dim); letter-spacing:0.01em; text-align:center;
+    padding:0 14px;
+}
+#ad-bar .ad-slot{
+    min-height:50px; min-width:240px;
+    display:flex; align-items:center; justify-content:center;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>초경량비행장치 구술 연습</h1>
+
+<div id="question"></div>
+
+<input
+id="answer"
+placeholder="정답을 입력하세요"
+autocomplete="off">
+
+<br>
+
+<button id="submitBtn">제출</button>
+<button id="nextBtn">다음 문제</button>
+<button id="speakBtn">🔊 다시 듣기</button>
+
+<div id="result"></div>
+  <div id="ad-bar">
+    <div class="ad-disclosure">이 앱은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.</div>
+    <div class="ad-slot">
+      <script src="https://ads-partners.coupang.com/g.js"></script>
+      <script>
+          new PartnersCoupang.G({"id":1000572,"trackingCode":"AF0795367","subId":null,"template":"carousel","width":"240","height":"50"});
+      </script>
+    </div>
+  </div>
+</div>
+
+<script>
+
+const questions = [
+
+{
+question:"취득하려는 자격증 명칭은?",
+answer:"초경량비행장치 무인 멀티콥터 조종자 자격증",
+keywords:["초경량비행장치","무인","멀티콥터","조종자","자격증"]
+},
+
+{
+question:"초경량비행장치란?",
+answer:"연료 중량을 제외한 자체중량이 150kg이하인 무인비행기 또는 무인회전익 비행장치",
+keywords:["연료","중량","제외","자체중량","150kg","이하"]
+},
+
+{
+question:"1종 기체의 무게 기준?",
+answer:"최대이륙중량 25kg 초과 자체중량 150kg 이하",
+keywords:["최대이륙중량","25kg","초과","자체중량","150kg","이하"]
+},
+
+{
+question:"2종 기체의 무게 기준?",
+answer:"최대이륙중량 7kg 초과 25kg 이하",
+keywords:["최대이륙중량","7kg","초과","25kg","이하"]
+},
+
+{
+question:"3종 기체의 무게 기준?",
+answer:"최대이륙중량 2kg 초과 7kg 이하",
+keywords:["최대이륙중량","2kg","초과","7kg","이하"]
+},
+
+{
+question:"4종 기체의 무게 기준?",
+answer:"최대이륙중량 250g 초과 2kg 이하",
+keywords:["최대이륙중량","250g","초과","2kg","이하"]
+},
+
+{
+question:"멀티콥터 장치신고 기준?",
+answer:"배터리 무게 포함 최대이륙중량 2kg 초과 또는 사업용 기체",
+keywords:["배터리","최대이륙중량","2kg","초과","사업용","기체"]
+},
+
+{
+question:"멀티콥터 안전성인증검사 기준?",
+answer:"최대이륙중량 25kg 초과시",
+keywords:["최대이륙중량","25kg","초과"]
+},
+
+{
+question:"안전성인증검사 유효기간?",
+answer:"2년",
+keywords:["2년"]
+},
+
+{
+question:"안전성인증검사 담당기관?",
+answer:"항공안전기술원",
+keywords:["항공안전기술원"]
+},
+
+{
+question:"안전성인증검사 분류?",
+answer:"초도검사 정기검사 수시검사 재검사",
+keywords:["초도","정기","수시","재"]
+},
+
+{
+question:"초도검사란?",
+answer:"국내에서 설계/제작 또는 국외에서 도입한 초경량비행장치의 안전성인증을 위한 최초검사",
+keywords:["제작","도입","최초"]
+},
+
+{
+question:"정기검사란?",
+answer:"안전성인증의 유효기간 만료일이 도래되어 새로운 안전성인증을 받기 위한 검사",
+keywords:["유효기간","만료일","새로운","받기"]
+},
+
+{
+question:"수시검사란?",
+answer:"초경량비행장치의 비행안전에 영향을 미치는 대개조후 기준에 적합한지 확인하는 검사",
+keywords:["비행안전","대개조","기준","적합"]
+},
+
+{
+question:"재검사란?",
+answer:"초도, 정기, 수시검사의 기준에 부적합한 사항에 대하여 정비 후 재실시하는 검사",
+keywords:["초도","정기","수시","부적합","정비","재실시"]
+},
+
+{
+question:"비행승인 및 촬영허기 신청방법?",
+answer:"드론 원스톱 민원서비스를 통하여 비행승인 요청서 및 촬영허가서를 작성하여 신청한다",
+keywords:["원스톱","민원","드론","승인","요청","촬영","허가"]
+},
+
+{
+question:"기체 중량에 따른 비행승인 규정?",
+answer:"최대이륙중량 25kg 초과인 기체는 모든 공역에서 비행 승인 후 비행가능. 최대이륙중량 25kg 이하인 기체는 비행금지구역 및 관제권을 제외한 공역에서 고도 150m 이하 비행시 승인 불필요",
+keywords:["최대이륙중량","25kg","초과","모든","이하","비행금지구역", "관제권", "150m", "불필요"]
+},
+
+{
+question:"비행금지구역 8개?",
+answer:"P73, P518, R75, P61, P62, P63, P64, P65",
+keywords:["P73","P518","R75","P61","P62","P63", "P64", "P65"]
+},
+
+{
+question:"P73지역 및 비행승인 관할기관?",
+answer:"대통령 집무실 및 관저 반경 3.7km. 수도방위사령부",
+keywords:["대통령","집무실","관저","3.7","반경","수도방위사령부"]
+},
+
+{
+question:"R75지역 비행승인 관할기관?",
+answer:"수도방위사령부",
+keywords:["수도방위사령부"]
+},
+
+{
+question:"P518지역 및 비행승인 관할기관?",
+answer:"휴전선 인근 경기 북부와 강원 북부. 합동참모본부",
+keywords:["휴전선","경기","강원","북부","합동참모본부"]
+},
+
+{
+question:"원전지역 다섯 곳 위치와 명칭?",
+answer:"P61 부산 기장 고리원전, P62 경주 양남면 월성원전, P63 영광 홍농읍 한빛원전, P64 울진 한울원전, P65 대전 유성구 대전원자력연구원",
+keywords:["P61","부산","고리","P62","경주","월성", "P63", "영광", "한빛","P64","울진","한울","P65","대전","대전원자력연구원"]
+},
+
+{
+question:"비행이 금지된 원전지역 범위?",
+answer:"원전 중심으로부터 반경 18.6km",
+keywords:["원전","중심","반경","18.6km"]
+},
+
+{
+question:"원전지역 비행승인 관할기관?",
+answer:"A지역은 각 원전본부, B지역은 P61부터 P64까지는 부산지방항공청, P65는 청주공항출장소",
+keywords:["A","B","원전본부","부산지방항공청","청주공항출장소"]
+},
+
+{
+question:"관제공역이란?",
+answer:"공항중심(ARP)으로부터 반경 9.3km 이내의 비행이 금지된 구역",
+keywords:["공항중심","반경","9.3km"]
+},
+
+{
+question:"비행승인 신청하는 곳?",
+answer:"관할 지방항공청/국방부에 신청하고 국토교통부 장관의 승인",
+keywords:["지방항공청","국방부","국토교통부"]
+},
+
+{
+question:"서울지방항공청의 관할 지역?",
+answer:"서울, 경기, 강원, 충남, 충북, 전북",
+keywords:["서울","경기","강원","충남","충북","전북"]
+},
+
+{
+question:"부산지방항공청의 관할 지역?",
+answer:"경북, 경남, 전남",
+keywords:["경북","경남","전남"]
+},
+
+{
+question:"NOTAM이란?",
+answer:"항공종사자들이 반드시 적시에 인지해야할 항공시설, 업무, 절차 또는 위험의 신설, 운영상태에 대해 배포되는 공고문으로 최대 유효기간은 3개월이다",
+keywords:["항공종사자","적시에","인지","배포","공고문","유효기간","3개월"]
+},
+
+{
+question:"비행시 소지해야 할 품목?",
+answer:"자격증, 비행승인서, 비행기록부",
+keywords:["자격증","비행승인서","비행기록부"]
+},
+
+{
+question:"기상의 7대 요소?",
+answer:"기온, 기압, 습도, 구름, 강수, 시정, 바람",
+keywords:["기온","기압","습도","구름","강수","시정","바람"]
+},
+
+{
+question:"비행하면 안되는 기상 조건?",
+answer:"일출전, 일몰후, 눈, 비, 안개, 우박, 뇌우, 천둥, 강풍",
+keywords:["일출전","일몰후","눈","비","안개","우박","뇌우","천둥","강풍"]
+},
+
+{
+question:"조종자 준수사항 9가지?",
+answer:"비행중 낙하물 투하금지, 인구밀집 상공에서 위험한 비행금지, 비행금지구역/관제공역 비행금지, 비행고도 150m이상 비행금지, 가시거리 범위 외 비행금지, 일몰 후 일출 전 야간비행금지, 음주비행금지(혈중 알콜농도 0.02% 이상), 사고나 분실에 대비하여 비행장치에 소유자 이름과 연락처 기재(인식표 부착), 차상위 항공기 진로 방해 금지",
+keywords:["낙하물","인구밀집","비행금지","관제","150m","가시","야간","음주","소유자","이름","연락처","차상위"]
+},
+
+{
+question:"비행 중 낙하물 투하 규정은?",
+answer:"인명이나 재산에 위험을 초래할 우려가 있는 낙하물은 투하해서는 안 된다.",
+keywords:["인명","재산","위험","낙하물","투하"]
+},
+
+{
+question:"유인항공기 접근 시 어떻게 해야 하는가?",
+answer:"모든 항공기에 진로를 양보해야 한다.",
+keywords:["항공기","진로","양보"]
+},
+
+{
+question:"인구밀집지역 상공 비행 규정은?",
+answer:"인구가 밀집된 지역이나 사람이 많이 모인 장소 상공에서 위험한 비행을 해서는 안 된다.",
+keywords:["인구밀집","사람","위험","비행"]
+},
+
+{
+question:"기체에는 무엇을 표시해야 하는가?",
+answer:"소유자의 이름과 연락처를 기재해야 한다.",
+keywords:["소유자","이름","연락처"]
+},
+
+{
+question:"하루 중 비행이 금지된 시간은?",
+answer:"일몰 후부터 일출 전까지는 비행할 수 없다.",
+keywords:["일몰","일출","야간","비행금지"]
+},
+
+{
+question:"고도 150m 이상 비행하려면 어떻게 해야 하는가?",
+answer:"지방항공청 또는 국방부의 허가를 받아야 한다.",
+keywords:["150m","지방항공청","국방부","허가"]
+},
+
+{
+question:"조종자 준수사항 위반 시 처벌은?",
+answer:"1차 150만원, 2차 225만원, 3차 300만원 과태료",
+keywords:["150만원","225만원","300만원"]
+},
+
+{
+question:"말소 신고를 하지 않은 경우 처벌?",
+answer:"1차 15만원 2차 22.5만원 3차 30만원 과태료",
+keywords:["15","22.5","30"]
+},
+
+{
+question:"안전성 인증을 받지 않은 경우 처벌?",
+answer:"1차 250만원 2차 375만원 3차 500만원 과태료",
+keywords:["250","375","500","과태료"]
+},
+
+{
+question:"사업등록 하지 않고 사업할 경우 처벌?",
+answer:"1년 이하의 징역 또는 1천만원 이하 벌금",
+keywords:["1년","징역","1천만원","벌금"]
+},
+
+{
+question:"비행제한공역에서 비행시 처벌?",
+answer:"벌금 500만원",
+keywords:["벌금","500"]
+},
+
+{
+question:"음주비행시 처벌?",
+answer:"3년 이하 징역 또는 3천만원 이하 벌금",
+keywords:["","","","",""]
+},
+
+{
+question:"조종자 증명을 받지 않고 비행시 처벌?",
+answer:"1차 200만원, 2차 300만원, 3차 400만원 과태료",
+keywords:["200","300","400"]
+},
+
+{
+question:"음주비행 처벌은?",
+answer:"3년 이하의 징역 또는 3천만원 이하의 벌금",
+keywords:["3년","징역","3000만원","벌금"]
+},
+
+{
+question:"기체신고 변경신고 않고 비행한 처벌?",
+answer:"최대 6개월 이하 징역 또는 500만원 이하 벌금",
+keywords:["6개월","징역","500만원","벌금"]
+},
+
+{
+question:"신고번호 미표시 또는 거짓표시 처벌?",
+answer:"1차 50만원 2차 75만원 3차 100만원 과태료",
+keywords:["50","75","100","과태료"]
+},
+
+{
+question:"인명사고 발생 시 신고기관은?",
+answer:"119, 지방항공청, 한국교통안전공단 항공안전처 초경량비행장치 사고조사팀",
+keywords:["119","지방항공청","한국교통안전공단", "사고조사팀"]
+},
+
+{
+question:"사고 발생시 보고 기한?",
+answer:"항공기 사고/준사고는 알게 된 즉시 보고. 항공안전 장애는 알게 된 시점에서 72시간 이내 보고",
+keywords:["사고","즉시","장애","72시간"]
+},
+
+{
+question:"비상시 조치요령은?",
+answer:"주변에 비상을 알리고 안전한 장소에 즉시 착륙시킨다.",
+keywords:["비상","안전","착륙"]
+},
+
+{
+question:"GPS 신호 불량시 대처요령?",
+answer:"자세모드로 전환 후 비상 착륙 시킨다",
+keywords:["자세모드","비상"]
+},
+
+{
+question:"항공기에 작용하는 4가지 힘은?",
+answer:"양력, 중력, 추력, 항력",
+keywords:["양력","중력","추력","항력"]
+},
+
+{
+question:"추력과 항력을 설명하시오?",
+answer:"추력은 항공기가 앞으로 전진하려는 힘이고 항력은 항공기의 전진을 방해하는 힘",
+keywords:["전진","방해","힘"]
+},
+
+{
+question:"특별승인이 필요한 비행은?",
+answer:"야간비행, 고도 150m 이상 비행",
+keywords:["야간","150m"]
+},
+
+{
+question:"프로펠러(로터)의 역할은?",
+answer:"회전하면서 양력을 발생시켜 기체를 부양한다.",
+keywords:["양력","회전","부양"]
+},
+
+{
+question:"헬리콥터와 멀티콥터의 차이점은?",
+answer:"헬리콥터는 하나의 축에 가변피치를 사용하고 피치각 변동으로 운영되며 테일로터로 토크를 상쇄시키며, 멀티콥터는 다축에 고정피치를 사용하고 모터 회전수 변화로 운영되며 각 로터가 반대방향으로 돌아 토크를 상쇄한다.",
+keywords:["피치각","가변피치","테일로터","고정피치", "회전수", "토크", "상쇄"]
+},
+
+{
+question:"토크와 반토크란?",
+answer:"토크는 로터 회전에 의해 기체가 반대 방향으로 회전하려는 힘이며, 반토크는 그 힘을 상쇄하는 것이다.",
+keywords:["토크","반토크","회전","상쇄"]
+},
+
+{
+question:"헥사콥터에서 모터 하나가 고장나면 어찌되는가?",
+answer:"고장난 프로펠러의 방향대로 회전하며 추락한다",
+keywords:["고장","방향대로","회전","추락"]
+},
+
+{
+question:"로터 수에 따른 멀티콥터의 종류는?",
+answer:"3개 트라이콥터, 4개 쿼드콥터, 6개 헥사콥터, 8개 옥토콥터, 12개 도데카콥터",
+keywords:["트라이","쿼드","헥사","옥토","도데카"]
+},
+
+{
+question:"로터 하나가 멈추면 기체는 어떻게 되는가?",
+answer:"쿼드콥터는 기울어지면서 뒤집혀 즉시 추락하고, 헥사콥터는 고장난 프로벨러의 방향으로 회전하며 추락하고, 옥토콥터는 제자리 호버링이 가능하다.",
+keywords:["쿼드","즉시","헥사","회전","추락","옥토","호버링"]
+},
+
+{
+question:"항공기의 3축은?",
+answer:"롤(Roll), 피치(Pitch), 요(Yaw)",
+keywords:["롤","피치","요"]
+},
+
+{
+question:"항공기 조종성 3가지 원리?",
+answer:"롤링은 에일러런으로 좌우 이동. 피칭은 엘리베이터로 전후진. 요잉은 러더로 좌우회전",
+keywords:["롤링","피칭","요잉","에일러런","엘리베이터","러더","이동","회전"]
+},
+
+{
+question:"피치(Pitch) 조작 시 기체는 어떻게 움직이는가?",
+answer:"기체가 전진 또는 후진한다.",
+keywords:["전진","후진"]
+},
+
+{
+question:"롤(Roll) 조작 시 기체는 어떻게 움직이는가?",
+answer:"기체가 좌우로 이동한다.",
+keywords:["좌","우","이동"]
+},
+
+{
+question:"요(Yaw) 조작 시 기체는 어떻게 움직이는가?",
+answer:"기체가 제자리에서 좌우로 회전한다.",
+keywords:["회전"]
+},
+
+{
+question:"전후진 및 좌우 이동시 로터 회전의 변화는?",
+answer:"이동하고자 하는 방향의 로터 속도는 줄고, 반대편 로터의 속도는 증가",
+keywords:["속도","반대편"]
+},
+
+{
+question:"러더 조작시 로터 회전의 변화는?",
+answer:"기체회전의 반대방향으로 회전하는 로터의 속도 증가",
+keywords:["반대방향","속도","증가"]
+},
+
+{
+question:"IMU(관성측정장치)란?",
+answer:"가속도 센서, 자이로 센서, 지자기 센서로 구성되며 기체의 자세와 움직임을 측정하는 장치이다.",
+keywords:["가속도","자이로","지자기","자세","움직임"]
+},
+
+{
+question:"자이로 센서의 역할은?",
+answer:"수평유지센서로 기체 3축의 각속도를 측정하여 자세를 유지한다.",
+keywords:["수평","자세"]
+},
+
+{
+question:"기압계의 역할은?",
+answer:"고도센서로 대기압을 측정하여 기체의 고도를 측정한다.",
+keywords:["대기압","고도"]
+},
+
+{
+question:"GPS의 역할은?",
+answer:"위성 신호를 이용하여 위치, 거리, 속도를 측정한다.",
+keywords:["위성","위치","거리","속도"]
+},
+
+{
+question:"지자기계 센서의 역할은?",
+answer:"자북을 측정하여 기체의 방향 정보를 측정한다",
+keywords:["자북","방향"]
+},
+
+{
+question:"FC(Flight Controller)의 역할은?",
+answer:"비행체를 제어하는 장치로 센서 값을 연산하여 ESC에 모터 제어 신호를 보낸다.",
+keywords:["비행제어","센서","ESC","제어"]
+},
+
+{
+question:"ESC의 역할은?",
+answer:"모터로 공급되는 전류를 조절하여 모터의 회전속도를 결정한다.",
+keywords:["모터","전류","회전속도"]
+},
+
+{
+question:"PMU(레귤레이터)의 역할은?",
+answer:"기체에 전압을 일정한 값으로 흐르게 해주는 장치",
+keywords:["전압","일정"]
+},
+
+{
+question:"프로펠러 규격은 어떻게 읽는가?",
+answer:"앞 숫자는 프로펠러의 길이고 뒤 숫자는 피치며 단위는 인치다.",
+keywords:["길이","피치","인치"]
+},
+
+{
+question:"프로펠러의 피치란?",
+answer:"프로펠러가 한 바퀴 회전했을 때 이동하는 거리이다.",
+keywords:["한바퀴","회전","거리"]
+},
+
+{
+question:"모터에 각인된 규격 6215의 의미는?",
+answer:"62는 모터의 직경이고 15는 모터의 높이이다.",
+keywords:["직경","높이"]
+},
+
+{
+question:"KV란?",
+answer:"속도상수로서 1V의 전압을 인가하였을 때 모터의 분당 회전수",
+keywords:["속도상수","1V","회전수"]
+},
+
+{
+question:"조종기 주파수는 어떤 방식인가?",
+answer:"호핑방식으로 빈채널을 스캔하여 연결 후 일정속도로 주파수가 이동되는 방식",
+keywords:["호핑방식"]
+},
+
+{
+question:"1모드와 2모드의 차이점은?",
+answer:"스로틀과 엘리베이터 레버의 위치가 서로 바뀐다.",
+keywords:["스로틀","엘리베이터","위치"]
+},
+
+{
+question:"GPS 모드란?",
+answer:"GPS를 이용하여 위치, 고도, 수평을 유지하는 비행모드이다.",
+keywords:["GPS","위치","고도","수평"]
+},
+
+{
+question:"자세모드(ATTI)란?",
+answer:"위치유지는 하지 않고 고도와 수평만 유지하는 비행모드이다.",
+keywords:["고도","수평","위치"]
+},
+
+{
+question:"리턴 투 홈(RTH)이란?",
+answer:"기체가 저장된 홈 포인트로 자동 복귀하는 기능이다.",
+keywords:["홈","자동","복귀"]
+},
+
+{
+question:"페일세이프(Fail Safe)란?",
+answer:"조종기와 연결이 끊기면 기체가 자동으로 이륙지점으로 복귀하여 착륙하는 기능이다.",
+keywords:["연결","끊김","자동","복귀","착륙"]
+},
+
+{
+question:"배터리 관리방법은?",
+answer:"과방전과 과충전을 피하고 장기보관 시 셀당 약 3.8V 상태로 보관한다. 3개월 미만시 -20~45도에서 보관하고, 장기보관시 22~28도의 상온에서 보관한다.",
+keywords:["과방전","과충전","3.8V","보관"]
+},
+
+{
+question:"배터리 폐기 방법?",
+answer:"환기가 잘 되는 장소에서 소금물에 담구거나 전구 또는 충전기의 방전모드로 완전히 방전 후 지정된 장소에 폐기",
+keywords:["소금물","방전","완전"]
+},
+
+{
+question:"리튬폴리머 배터리 1셀 기준전압, 완충전압?",
+answer:"3.7V, 4.2V",
+keywords:["3.7V","4.2V"]
+},
+
+{
+question:"리튬폴리머 배터리 6셀의 기준전압과 완충전압은?",
+answer:"22.2V, 25.2V",
+keywords:["22.2V","25.2V"]
+},
+
+{
+question:"헥사콥터가 전진할 때 모터의 회전속도 변화는?",
+answer:"앞쪽 두 개 모터는 약하게, 뒤쪽 두 개 모터는 강하게 회전한다.",
+keywords:["뒤","강"]
+},
+
+{
+question:"헥사콥터가 후진할 때 모터의 회전속도 변화는?",
+answer:"앞쪽 두 개 모터는 강하게, 뒤쪽 두 개 모터는 약하게 회전한다.",
+keywords:["앞","강"]
+},
+
+{
+question:"헥사콥터가 좌로 이동할 때 모터의 회전속도 변화는?",
+answer:"좌측 3개 모터는 약하게, 우측 3개 모터는 강하게 회전한다.",
+keywords:["3","우","강"]
+},
+
+{
+question:"헥사콥터가 우로 이동할 때 모터의 회전속도 변화는?",
+answer:"좌측 3개 모터는 강하게, 우측 3개 모터는 약하게 회전한다.",
+keywords:["좌","3","강"]
+},
+
+{
+question:"헥사콥터가 좌회전시 모터의 회전속도 변화는?",
+answer:"시계방향 모터(2,4,6번)는 강하게, 반시계방향 모터(1,3,5번)는 약하게 회전한다.",
+keywords:["시계","2","4","6","강"]
+},
+
+{
+question:"헥사콥터가 우회전시 모터의 회전속도 변화는?",
+answer:"시계방향 모터(2,4,6번)는 약하게, 반시계방향 모터(1,3,5번)는 강하게 회전한다.",
+keywords:["반시계","1","3","5","강"]
+}
+
+
+];
+
+let current = 0;
+let answered = false;
+
+// -------------------
+// 음성 읽기
+// -------------------
+
+function speak(text){
+
+    speechSynthesis.cancel();
+
+    const utter = new SpeechSynthesisUtterance(text);
+
+    utter.lang="ko-KR";
+    utter.rate=0.95;
+    utter.pitch=1.0;
+
+    const voices=speechSynthesis.getVoices();
+
+    const ko=voices.find(v=>v.lang.startsWith("ko"));
+
+    if(ko){
+        utter.voice=ko;
+    }
+
+    speechSynthesis.speak(utter);
+
+}
+
+speechSynthesis.onvoiceschanged=function(){
+    speechSynthesis.getVoices();
+};
+
+// -------------------
+// 랜덤 문제
+// -------------------
+
+function randomQuestion(){
+
+    let next;
+
+    do{
+
+        next=Math.floor(Math.random()*questions.length);
+
+    }while(next===current && questions.length>1);
+
+    current=next;
+
+}
+
+// -------------------
+// 문제 출력
+// -------------------
+
+function showQuestion(){
+
+    document.getElementById("question").innerText=
+    questions[current].question;
+
+    document.getElementById("answer").value="";
+
+    document.getElementById("result").innerHTML="";
+
+    answered=false;
+
+    document.getElementById("answer").focus();
+
+    setTimeout(function(){
+
+        speak(questions[current].question);
+
+    },300);
+
+}
+
+// -------------------
+// 유사율 계산
+// -------------------
+
+function similarity(user,keywords){
+
+    let count=0;
+
+    user=user.replace(/\s/g,"");
+
+    keywords.forEach(function(k){
+
+        if(user.includes(k.replace(/\s/g,""))){
+
+            count++;
+
+        }
+
+    });
+
+    return Math.round(count/keywords.length*100);
+
+}
+
+// -------------------
+// 제출
+// -------------------
+
+function submit(){
+
+    if(answered) return;
+
+    const user=document.getElementById("answer").value;
+
+    const q=questions[current];
+
+    const score=similarity(user,q.keywords);
+
+    document.getElementById("result").innerHTML=`
+        <b>정답</b><br>
+        ${q.answer}
+        <br><br>
+        <b>유사율 : ${score}%</b>
+    `;
+
+    answered=true;
+
+    speak("정답은 " + q.answer);
+
+}
+
+// -------------------
+// 다음 문제
+// -------------------
+
+function next(){
+
+    randomQuestion();
+
+    showQuestion();
+
+}
+
+// -------------------
+// 버튼
+// -------------------
+
+document.getElementById("submitBtn").onclick=submit;
+
+document.getElementById("nextBtn").onclick=next;
+
+document.getElementById("speakBtn").onclick=function(){
+
+    speak(questions[current].question);
+
+};
+
+// -------------------
+// Enter
+// -------------------
+
+document.getElementById("answer").addEventListener("keydown",function(e){
+
+    if(e.key==="Enter"){
+
+        if(answered){
+
+            next();
+
+        }else{
+
+            submit();
+
+        }
+
+    }
+
+});
+
+// 첫 문제
+
+randomQuestion();
+
+showQuestion();
+
+</script>
+
+</body>
+</html>
